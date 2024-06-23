@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>WebSocket Client</title>
+</head>
+
+<body>
+    <h1>WebSocket Client</h1>
+
+    <button onclick="connect()">Connect</button>
+
+    <input type="text" id="message" placeholder="Enter message" />
+    <button onclick="sendMessage()">Send</button>
+    <pre id="response"></pre>
+
+    <br />
+    <button onclick="closeConnection()">Close</button>
+
+    <script>
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const user = urlParams.get('user');
+
+        var ws = null;
+
+        function connect() {
+            ws = new WebSocket("ws://localhost:8025/websockets/test?user=" + user);
+
+            ws.onopen = function () {
+                console.log("WebSocket is connected.");
+            };
+
+            ws.onmessage = function (event) {
+                console.log(event);
+                document.getElementById("response").textContent += "\n" + event.data;
+            };
+        }
+
+        function closeConnection() {
+            ws.close();
+        }
+
+        function sendMessage() {
+            var message = document.getElementById("message").value;
+            ws.send(message);
+        }
+    </script>
+</body>
+
+</html>
